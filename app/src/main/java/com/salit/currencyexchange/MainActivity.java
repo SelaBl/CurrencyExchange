@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
             List<Currency> currencies = currencyExchangeData.getCurrencies();
             List<String> currenciesStr = new ArrayList<String>();
             for (Currency currency : currencies) {
-                currenciesStr.add(currency.getCountry());
+                currenciesStr.add(currency.getCurrencyCode());
             }
 
             Log.d(TAG, "currenciesStr =  " + currenciesStr);
