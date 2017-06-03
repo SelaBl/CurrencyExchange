@@ -1,10 +1,9 @@
 package com.salit.currencyexchange;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
 
     private static String TAG = MainActivity.class.getName();
     ListView currenciesListView;
-    ArrayAdapter<String> currenciesAdapter;
+    CurrencyAdaper currencyAdapter;
     TextView textView;
 
     @Override
@@ -27,10 +26,9 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
         setContentView(R.layout.activity_main);
         currenciesListView = (ListView) findViewById(R.id.currencies_list_view);
         List<String> currenciesStr = new ArrayList<String>();
-        ArrayAdapter<String> currenciesAdapter =
-                new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_1,
-                        currenciesStr);
+        currencyAdapter = new CurrencyAdaper(
+                new ArrayList<Currency>(),getApplicationContext());
+
         textView = (TextView) findViewById(R.id.text_view);
 
 
@@ -58,29 +56,15 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
 
         if (currenciesListView != null && currencyExchangeData != null) {
 
-            List<Currency> currencies = currencyExchangeData.getCurrencies();
-            List<String> currenciesStr = new ArrayList<String>();
-            for (Currency currency : currencies) {
-                currenciesStr.add(currency.getCurrencyCode());
-            }
+            ArrayList<Currency> currencies = new ArrayList<>(currencyExchangeData.getCurrencies());
+            View header = getLayoutInflater().inflate(R.layout.currency_list_item, null);
+            currenciesListView.addHeaderView(header);
 
-            Log.d(TAG, "currenciesStr =  " + currenciesStr);
-            if(currenciesAdapter != null) {
-                currenciesAdapter.clear();
+            if(currencyAdapter != null) {
+                currencyAdapter.clear();
             }
-            currenciesAdapter =
-                    new ArrayAdapter<String>(this,
-                            android.R.layout.simple_list_item_1,
-                            currenciesStr);
-
-            currenciesListView.setAdapter(currenciesAdapter);
-            currenciesAdapter.notifyDataSetChanged();
+            currencyAdapter = new CurrencyAdaper(currencies, getApplicationContext());
+            currenciesListView.setAdapter(currencyAdapter);
         }
-
-
-
-
-
-
     }
 }
