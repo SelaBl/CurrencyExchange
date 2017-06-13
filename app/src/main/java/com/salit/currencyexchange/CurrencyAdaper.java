@@ -50,7 +50,6 @@ public class CurrencyAdaper extends ArrayAdapter<Currency> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.currency_list_item,parent, false);
-            viewHolder.currencyName = (TextView) convertView.findViewById(R.id.currency_name);
             viewHolder.currencyUnit = (TextView) convertView.findViewById(R.id.currency_unit);
             viewHolder.currencyCode = (TextView) convertView.findViewById(R.id.currency_code);
             viewHolder.currencyCountry = (TextView) convertView.findViewById(R.id.currency_country);
@@ -67,7 +66,6 @@ public class CurrencyAdaper extends ArrayAdapter<Currency> {
 
         lastPosition = position;
 
-        viewHolder.currencyName.setText(currency.getName());
         viewHolder.currencyUnit.setText(String.valueOf(currency.getUnit()));
         viewHolder.currencyCode.setText(currency.getCurrencyCode());
         viewHolder.currencyCountry.setText(currency.getCountry());

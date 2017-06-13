@@ -2,8 +2,8 @@ package com.salit.currencyexchange;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
     private static String TAG = MainActivity.class.getName();
     ListView currenciesListView;
     CurrencyAdaper currencyAdapter;
-    TextView textView;
+    TextView lastUpdateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
         currencyAdapter = new CurrencyAdaper(
                 new ArrayList<Currency>(),getApplicationContext());
 
-        textView = (TextView) findViewById(R.id.text_view);
+        lastUpdateTextView = (TextView) findViewById(R.id.last_update_text_view);
 
 
         //TODO put it in singelton
@@ -53,18 +53,21 @@ public class MainActivity extends AppCompatActivity implements OnDataChangedList
     public void onDataChanged(CurrencyExchangeData currencyExchangeData) {
 
         Log.d(TAG, "data =  " + currencyExchangeData);
-
-        if (currenciesListView != null && currencyExchangeData != null) {
-
-            ArrayList<Currency> currencies = new ArrayList<>(currencyExchangeData.getCurrencies());
-            View header = getLayoutInflater().inflate(R.layout.currency_list_item, null);
-            currenciesListView.addHeaderView(header);
-
-            if(currencyAdapter != null) {
-                currencyAdapter.clear();
+        if(currencyExchangeData != null)
+        {
+            if(lastUpdateTextView != null){
+                String dateStr = DateFormat.format("dd-MM-yyyy hh:mm:ss a", currencyExchangeData.getLastUpdate()).toString();
+                lastUpdateTextView.setText(dateStr);
             }
-            currencyAdapter = new CurrencyAdaper(currencies, getApplicationContext());
-            currenciesListView.setAdapter(currencyAdapter);
+
+            if (currenciesListView != null) {
+                ArrayList<Currency> currencies = new ArrayList<>(currencyExchangeData.getCurrencies());
+                if(currencyAdapter != null) {
+                    currencyAdapter.clear();
+                }
+                currencyAdapter = new CurrencyAdaper(currencies, getApplicationContext());
+                currenciesListView.setAdapter(currencyAdapter);
+            }
         }
     }
 }
